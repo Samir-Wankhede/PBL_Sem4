@@ -39,16 +39,13 @@ function Home() {
           <li>
             <a href="#">Contact Us</a>
           </li>
+          <li>
+          <Link to="/login">Sign In</Link>
+          </li>
+          <li>
+          <Link to="/register">Sign Up</Link>
+          </li>
         </ul>
-        <div className="buttons">
-        <Link to="/login">Sign In</Link>
-          
-            
-        
-          <Link to="signup">Sign Up</Link>
-            
-         
-        </div>
       </nav>
     </header>
     <section className="hero-section">

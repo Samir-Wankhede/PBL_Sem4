@@ -3,38 +3,40 @@ import { Link, Navigate } from 'react-router-dom';
 import './login.css';
 import { useNavigate } from "react-router-dom";
 function LoginPage() {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  const [user,setUser] = useState({
+    email:"",password:"",
+  });
 
 const navigate=useNavigate();
   function handleChange(e) {
-
     const { name, value } = e.target;
-    if (name === 'userId') {
-      setUserId(value);
-    } else if (name === 'password') {
-      setPassword(value);
-    }
+    setUser((prev)=>{
+      return({
+        ...prev,
+        [name]:value,
+      })
+    })
   }
 
   function handleForm(e) {
     e.preventDefault();
-    const userData = {
-      userId: userId,
-      password: password
-    };
-    fetch('/api/login', {
-      method: 'post',
+    fetch('users/login', {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(userData)
+      body: JSON.stringify(user)
     }).then(res => res.json())
       .then(data => {
         console.log(data);
-        
-        navigate(data.redirect);
-      
+        if (data.redirect === "/login"){
+          alert(data.message);
+          setUser({
+            email:"",password:"",
+          });
+        }else{
+          navigate(data.redirect);
+        }
       })
       .catch(error => {
         console.error('Error:', error);
@@ -52,11 +54,11 @@ const navigate=useNavigate();
       <form onSubmit={handleForm}>
         <div className="row">
           <i className="fa-regular fa-heart" />
-          <input type="text" name="userId" placeholder="Email or Phone" required="" onChange={handleChange} />
+          <input value={user.email} type="text" name="email" placeholder="Email" required="" onChange={handleChange} />
         </div>
         <div className="row">
           <i className="fa-solid fa-heart" />
-          <input type="password" name="password" placeholder="Password" required="" onChange={handleChange} />
+          <input value={user.password} type="password" name="password" placeholder="Password" required="" onChange={handleChange} />
         </div>
         <div className="pass">
           <a href="#">Forgot password?</a>
@@ -65,7 +67,7 @@ const navigate=useNavigate();
           <input type="submit" value="Login" />
         </div>
         <div className="signup-link">
-          Not a member? <Link to="/signup">Signup Now</Link>
+          Not a member? <Link to="/register">Signup Now</Link>
         </div>
       </form>
     </div>

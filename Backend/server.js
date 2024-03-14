@@ -1,15 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
-import Routes from "./routes/routers.js";
+import userRoutes from "./routes/routers.js";
 import pg from "pg";
 import env from "dotenv";
+import cors from "cors";
 
 env.config();
 const app = express();
 
 
 //middlewares
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors());
+app.use(express.json());
  app.use(express.static("public"));
 app.use((req,res,next)=>{
     console.log(req.path, req.method);
@@ -17,7 +19,7 @@ app.use((req,res,next)=>{
 });
 
 //routes
-app.use("/api",Routes);
+app.use("/users",userRoutes);
 
 //dbConnection
 const db = new pg.Client({
@@ -36,3 +38,5 @@ const db = new pg.Client({
     .catch((err)=>{
         console.log(err);
     });
+
+    export {db};
